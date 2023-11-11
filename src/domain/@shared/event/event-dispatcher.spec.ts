@@ -1,3 +1,6 @@
+import EnviaConsoleLogHandler from '../../customer/event/handler/customer-address-changed-log.handler';
+import EnviaConsoleLog1Handler from '../../customer/event/handler/customer-created-log1.handler';
+import EnviaConsoleLog2Handler from '../../customer/event/handler/customer-created-log2.handler';
 import SendEmailWhenProductIsCreatedHandler from "../../product/event/handler/send-email-when-product-is-created.handler";
 import ProductCreatedEvent from "../../product/event/product-created.event";
 import EventDispatcher from "./event-dispatcher";
@@ -78,5 +81,38 @@ describe("Domain events tests", () => {
     eventDispatcher.notify(productCreatedEvent);
 
     expect(spyEventHandler).toHaveBeenCalled();
+  });
+
+  it("should register log 1 when customer is created", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLog1Handler();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler);
+
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"]).toBeDefined();
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"].length).toBe(1);
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"][0]).toMatchObject(eventHandler);
+  });
+
+  it("should register log 2 when customer is created", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLog2Handler();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler);
+
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"]).toBeDefined();
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"].length).toBe(1);
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"][0]).toMatchObject(eventHandler);
+  });
+
+  it("should changed address log when customer change address", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLogHandler();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler);
+
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"]).toBeDefined();
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"].length).toBe(1);
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"][0]).toMatchObject(eventHandler);
   });
 });

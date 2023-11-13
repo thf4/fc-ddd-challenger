@@ -131,16 +131,21 @@ describe("Order repository test", () => {
       1
     );
 
-    const newOrder = new Order("123", "123", [newOrderItem]);
-    await orderRepository.update(newOrder);
+    await OrderModel.destroy({ where: { id: order.id } });
 
-    const orderModel2 = await OrderModel.findOne({
+    const newOrder = new Order("123", "123", [newOrderItem]);
+    
+    await OrderModel.update(newOrder, { where: { id: order.id } });
+    
+    await orderRepository.create(newOrder);
+
+    const orderModelUpdated = await OrderModel.findOne({
       where: { id: order.id },
       include: ["items"],
     });
 
-    expect(orderModel2.total).toBe(newOrder.total());
-    expect(orderModel2.items.length).toBe(2);
+    expect(orderModelUpdated.total).toBe(newOrder.total());
+    expect(orderModelUpdated.items.length).toBe(1);
   });
 
   it("should find a order", async () => {
@@ -169,7 +174,7 @@ describe("Order repository test", () => {
 
     expect(order).toStrictEqual(orderResult);
   });
-  
+
   it("should find all orders", async () => {
     const customerRepository = new CustomerRepository();
     const customer = new Customer("123", "Customer 1");

@@ -131,14 +131,10 @@ describe("Order repository test", () => {
       1
     );
 
-    await OrderModel.destroy({ where: { id: order.id } });
-
     const newOrder = new Order("123", "123", [newOrderItem]);
     
-    await OrderModel.update(newOrder, { where: { id: order.id } });
+    await orderRepository.update(newOrder);
     
-    await orderRepository.create(newOrder);
-
     const orderModelUpdated = await OrderModel.findOne({
       where: { id: order.id },
       include: ["items"],
